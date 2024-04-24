@@ -1,20 +1,21 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RedditTracker.Core;
 
-namespace ConsoleApp1;
+namespace RedditTracker;
 
-public sealed class RedisPollingService :IHostedService, IDisposable {
-    private readonly IConfiguration _config;
-    private readonly ILogger<RedisPollingService> _logger;
+public sealed class RedditPollingService :IHostedService, IDisposable {
+    private readonly TrackerSettings _settings;
+    private readonly ILogger<RedditPollingService> _logger;
     private Task? _worker;
     private bool _isRunning;
 
-    public RedisPollingService(
-        IConfiguration config,
-        ILogger<RedisPollingService> logger
+    public RedditPollingService(
+        TrackerSettings settings,
+        ILogger<RedditPollingService> logger
     ) {
-        _config = config ?? throw new ArgumentNullException(nameof(config));
+        _settings = settings ?? throw new ArgumentNullException(nameof(settings));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 

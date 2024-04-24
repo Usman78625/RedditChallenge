@@ -2,11 +2,10 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <RootNamespace>ConsoleApp1</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,6 +21,15 @@
       <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
       <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+      <PackageReference Include="Reddit" Version="1.5.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\RedditTracker.Core\RedditTracker.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\RedditTracker.Core\RedditTracker.Core.csproj" />
     </ItemGroup>
 
 </Project>

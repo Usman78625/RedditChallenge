@@ -22,6 +22,7 @@ public sealed class UserStatisticsManager : IUserStatisticsManager {
 
 
     public void UpdateData(List<Post> posts) {
+        _logger.LogDebug("Processing incoming Data");
         var didChangeData = false;
         foreach (var post in posts) {
             var author = post.Author;
@@ -46,6 +47,7 @@ public sealed class UserStatisticsManager : IUserStatisticsManager {
 
         // Don't update our stats unless something changed
         if (didChangeData) {
+            _logger.LogDebug("Updating statistics");
             RecomputeStatistics();
         }
     }

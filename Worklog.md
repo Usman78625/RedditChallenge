@@ -36,4 +36,6 @@
 
 ~ 13:45
 18. The requirements are a little fuzzy with regard to how posts are ranked.  It seems to imply that we are tracking the posts with the most upvotes and the user with the most posts only during the time-window the application is running.  That is to say we are not looking at historical posts (i.e. the most upvotes of all time).  It's a little fuzzier as to if we should look at posts that were made prior to the application starting.  Given the requirement to track the users with the most posts (presumably during the time window the app is running), I'm going to assume that ANY upvote or ANY post to the particular subreddit needs to be tracked by the application.  We will then look at the posts those are applied to and do a simple count: net change during application runtime.  We can then organize and sort this data into a kind of "leaderboard."  For the sake of fun, we will default this to 10, but make it configurable for those who want a top 20 or top 100 list.
-19. 
+
+~ 15:45
+19. Stop for the day to play with the kids during dad day.  Will pick back up tomorrow.

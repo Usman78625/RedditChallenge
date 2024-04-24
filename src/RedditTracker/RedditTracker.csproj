@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
+      <Content Include=".dockerignore">
         <Link>.dockerignore</Link>
       </Content>
     </ItemGroup>
@@ -23,13 +23,13 @@
       <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
       <PackageReference Include="Reddit" Version="1.5.2" />
     </ItemGroup>
-
+    
     <ItemGroup>
       <ProjectReference Include="..\RedditTracker.Core\RedditTracker.Core.csproj" />
     </ItemGroup>
-
+    
     <ItemGroup>
-      <ProjectReference Include="..\RedditTracker.Core\RedditTracker.Core.csproj" />
+      <None Remove="Dockerfile" />
     </ItemGroup>
 
 </Project>

@@ -39,8 +39,18 @@ builder.Services.AddScoped<RedditClient>((sp) => {
     var settings = sp.GetRequiredService<TrackerSettings>();
     return new RedditClient(settings.AppId, settings.AppSecret, settings.RefreshToken);
 });
-builder.Services.AddScoped<IRedditApiClient, RedditApiClient>();
-builder.Services.AddScoped<IRedditProcessor, RedditProcessor>();
+
+// NOTE: Choosing singletons here because of the way most data sinks work,
+// although the actual use case may dictate a different lifetime.
+builder.Services
+    .AddSingleton<IUserStatisticsStorage, DummyUserStatisticsStorage>();
+builder.Services
+    .AddSingleton<IUpvoteStatisticsStorage, DummyUpvoteStatisticsStorage>();
+builder.Services
+    .AddSingleton<IUpvoteStatisticsManager, UpvoteStatisticsManager>();
+builder.Services.AddSingleton<IUserStatisticsManager, UserStatisticsManager>();
+builder.Services.AddSingleton<IRedditApiClient, RedditApiClient>();
+builder.Services.AddSingleton<IRedditMonitor, RedditMonitor>();
 
 // Register our Worker
 builder.Services.AddHostedService<RedditPollingService>();

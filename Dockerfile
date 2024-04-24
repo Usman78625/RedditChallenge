@@ -4,7 +4,7 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["ConsoleApp1/ConsoleApp1.csproj", "ConsoleApp1/"]
+COPY ["RedditTracker.csproj", "ConsoleApp1/"]
 RUN dotnet restore "ConsoleApp1/ConsoleApp1.csproj"
 COPY . .
 WORKDIR "/src/ConsoleApp1"

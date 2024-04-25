@@ -4,7 +4,7 @@ namespace RedditTracker.Core.Services;
 
 public sealed class UpvoteStatisticsManager : IUpvoteStatisticsManager {
     private readonly IUpvoteStatisticsStorage _storage;
-    private readonly ILogger<UserStatisticsManager> _logger;
+    private readonly ILogger<UpvoteStatisticsManager> _logger;
     private readonly TrackerSettings _settings;
 
     private readonly IDictionary<string, VotingRecord> _postVotes =
@@ -16,9 +16,9 @@ public sealed class UpvoteStatisticsManager : IUpvoteStatisticsManager {
     }
 
     public UpvoteStatisticsManager(
-        ILogger<UserStatisticsManager> logger,
-        TrackerSettings settings,
-        IUpvoteStatisticsStorage storage
+        ILogger<UpvoteStatisticsManager> logger,
+        IUpvoteStatisticsStorage storage,
+        TrackerSettings settings
     ) {
         _logger = logger;
         _settings = settings;

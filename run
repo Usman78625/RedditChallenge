@@ -1,5 +1,3 @@
 #!/bin/sh
 
-source .env
-
-dotnet ./dist/RedditTracker.dll
+docker-compose up

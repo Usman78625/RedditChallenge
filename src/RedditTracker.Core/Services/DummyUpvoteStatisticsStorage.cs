@@ -1,6 +1,6 @@
 using RedditTracker.Core.Models;
 
-namespace RedditTracker.Core;
+namespace RedditTracker.Core.Services;
 
 public class DummyUpvoteStatisticsStorage:IUpvoteStatisticsStorage {
     private readonly ILogger<DummyUpvoteStatisticsStorage> _logger;
@@ -17,10 +17,10 @@ public class DummyUpvoteStatisticsStorage:IUpvoteStatisticsStorage {
         foreach (var stat in stats) {
             if (isFirst) { // this saves us some monkeying around with LINQ to get the first record of an unknown IEnumerable,
                 // which may have unexpected memory or performance impact
-                _logger.LogInformation("New User Statistics Have Arrived At {Date}!", stat.Timestamp);
+                _logger.LogInformation("Voting Statistics Have Arrived At {Date}!", stat.Timestamp);
                 isFirst = false;
             }
-            _logger.LogInformation("\t{Rank}. {Post} - {NetVotes} ({Upvotes}-{Downvotes})", stat.Rank, stat.PostId, stat.NetVotes, stat.Upvotes, stat.Downvotes);
+            _logger.LogInformation("\t{Rank}. {Post} - {Upvotes} ({TotalVotes} Total)", stat.Rank, stat.PostId, stat.NetVotes, stat.Upvotes+stat.Downvotes);
         }
     }
 }

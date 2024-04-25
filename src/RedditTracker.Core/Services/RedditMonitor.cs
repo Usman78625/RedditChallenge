@@ -1,6 +1,7 @@
-namespace RedditTracker.Core;
+namespace RedditTracker.Core.Services;
 
 public class RedditMonitor : IRedditMonitor {
+    private readonly ILogger<RedditMonitor> _logger;
     private readonly IRedditApiClient _client;
     private readonly IUserStatisticsManager _userStatisticsManager;
     private readonly IUpvoteStatisticsManager _upvoteStatisticsManager;
@@ -9,11 +10,13 @@ public class RedditMonitor : IRedditMonitor {
     public RedditMonitor(
         IRedditApiClient client,
         IUserStatisticsManager userStatisticsManager,
-        IUpvoteStatisticsManager upvoteStatisticsManager
+        IUpvoteStatisticsManager upvoteStatisticsManager,
+        ILogger<RedditMonitor> logger
     ) {
         _client = client;
         _userStatisticsManager = userStatisticsManager;
         _upvoteStatisticsManager = upvoteStatisticsManager;
+        _logger = logger;
     }
 
     public void StartMonitoring() {
@@ -22,16 +25,29 @@ public class RedditMonitor : IRedditMonitor {
         }
 
         _isRunning = true;
-        
-        // Start the process of monitoring for new posts and building our statistics
-        var newPosts = _client.ListAndMonitorNewPosts((posts)
-            => _userStatisticsManager.UpdateData(posts));
-        _userStatisticsManager.UpdateData(newPosts);
 
-        // Start the process of monitoring hot posts
-        var hotPosts = _client.ListAndMonitorHotPosts((posts)
-            => _upvoteStatisticsManager.UpdateData(posts));
-        _upvoteStatisticsManager.UpdateData(hotPosts);
+        try {
+            // Start the process of monitoring for new posts and building our statistics
+            var newPosts = _client.ListAndMonitorNewPosts((posts)
+                => _userStatisticsManager.UpdateData(posts));
+            _userStatisticsManager.UpdateData(newPosts);
+
+            // Start the process of monitoring hot posts
+            var hotPosts = _client.ListAndMonitorHotPosts((posts)
+                => _upvoteStatisticsManager.UpdateData(posts));
+            _upvoteStatisticsManager.UpdateData(hotPosts);
+        }
+        catch (Exception exception) {
+            // Something went wrong...
+            // Log it
+            _logger.LogCritical(exception, "Critical Exception Starting Monitor");
+            
+            // Shut down anything that may have been started
+            StopMonitoring();
+            
+            // Flee!
+            Environment.Exit(1);
+        }
     }
 
     public void StopMonitoring() {
@@ -40,9 +56,15 @@ public class RedditMonitor : IRedditMonitor {
         }
 
         _isRunning = false;
-        
-        _client.StopMonitoringNewPosts();
-        _client.StopMonitoringHotPosts();
+
+        try {
+            _client.StopMonitoringNewPosts();
+            _client.StopMonitoringHotPosts();
+        }
+        catch (Exception exception) {
+            // This is interesting, but not critical, because we are already shutting down
+            _logger.LogError(exception, "Error During Shutdown");
+        }
     }
 
     public void Dispose() {

@@ -1,41 +1,72 @@
-namespace RedditTracker.Core;
+using RedditTracker.Core.Models;
 
-public sealed class UpvoteStatisticsManager:IUpvoteStatisticsManager {
-    private readonly IUserStatisticsStorage _storage;
+namespace RedditTracker.Core.Services;
+
+public sealed class UpvoteStatisticsManager : IUpvoteStatisticsManager {
+    private readonly IUpvoteStatisticsStorage _storage;
     private readonly ILogger<UserStatisticsManager> _logger;
     private readonly TrackerSettings _settings;
 
-    private readonly IDictionary<string, ICollection<string>> _authorCounts =
-        new Dictionary<string, ICollection<string>>();
+    private readonly IDictionary<string, VotingRecord> _postVotes =
+        new Dictionary<string, VotingRecord>();
+
     private class VotingRecord {
         public int UpVotes { get; set; }
         public int DownVotes { get; set; }
     }
-    
+
+    public UpvoteStatisticsManager(
+        ILogger<UserStatisticsManager> logger,
+        TrackerSettings settings,
+        IUpvoteStatisticsStorage storage
+    ) {
+        _logger = logger;
+        _settings = settings;
+        _storage = storage;
+    }
+
     public void UpdateData(List<Post> posts) {
         _logger.LogDebug("Processing incoming Data");
         var didChangeData = false;
         foreach (var post in posts) {
-            post.
+            var id = post.Permalink;
+            if (_postVotes.TryGetValue(id,out var record)) {
+                if (record.UpVotes != post.UpVotes ||
+                    record.DownVotes != post.DownVotes) {
+                    record.UpVotes = post.UpVotes;
+                    record.DownVotes = post.DownVotes;
+                    didChangeData = true;
+                }
+            }
+            else {
+                record = new VotingRecord
+                    { UpVotes = post.UpVotes, DownVotes = post.DownVotes };
+                _postVotes.Add(post.Permalink, record);
+                didChangeData = true;
+            }
         }
-        
+
         if (didChangeData) {
             _logger.LogDebug("Updating statistics");
             RecomputeStatistics();
         }
     }
-    
+
     private void RecomputeStatistics() {
-        var topPosters = _authorCounts
+        var topPosts = _postVotes
             .Select(kv => new {
-                Author = kv.Key, NumPosts = kv.Value.Count
+                PostId = kv.Key, 
+                UpVotes = kv.Value.UpVotes,
+                DownVotes= kv.Value.DownVotes
             }) // Project into a simple type
-            .OrderByDescending(i => i.NumPosts) // Top down
+            // It is important to note that the requirements say we are interested in the posts
+            // wit the most UPVOTES, not the net total highest vote
+            .OrderByDescending(i => i.UpVotes) // Top down
             .Take(_settings
-                .TopUserLeaderboardSize) // Our configurable leaderboard size.
-            .Enumerate((data, index) => new UpvoteStatisticsRecord(data.Author,
-                data.NumPosts, index, DateTime.UtcNow)) // Always use UTC
+                .TopVotesLeaderboardSize) // Our configurable leaderboard size.
+            .Enumerate((data, index) => new UpvoteStatisticsRecord(data.PostId,
+                data.UpVotes, data.DownVotes, index+1, DateTime.UtcNow)) // Always use UTC
             .ToArray(); // We could technically just forward all this on.
-        _storage.UpdateStatistics(topPosters);
+        _storage.UpdateStatistics(topPosts);
     }
 }

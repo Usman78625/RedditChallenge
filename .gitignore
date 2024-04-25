@@ -132,4 +132,11 @@ $RECYCLE.BIN/
 
 _NCrunch*
 
+# JetBrains IDE
 .idea/
+
+# Custom Entries
+.env
+
+.run/
+dist/

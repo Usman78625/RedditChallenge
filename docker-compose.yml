@@ -1,0 +1,9 @@
+version: '2'
+services:
+  tracker:
+    build: 
+      context: .
+      args:
+          FRAMEWORK_VERSION: "6.0"
+    env_file:
+      - .env

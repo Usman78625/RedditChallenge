@@ -1,6 +1,6 @@
 using RedditTracker.Core.Models;
 
-namespace RedditTracker.Core;
+namespace RedditTracker.Core.Services;
 
 /// <summary>
 /// This is a dummy class used to help demonstrate how we might store data for this application.
@@ -20,7 +20,7 @@ public class DummyUserStatisticsStorage:IUserStatisticsStorage {
         foreach (var stat in stats) {
             if (isFirst) { // this saves us some monkeying around with LINQ to get the first record of an unknown IEnumerable,
                            // which may have unexpected memory or performance impact
-                _logger.LogInformation("New User Statistics Have Arrived At {Date}!", stat.Timestamp);
+                _logger.LogInformation("User Statistics Have Arrived At {Date}!", stat.Timestamp);
                 isFirst = false;
             }
             _logger.LogInformation("\t{Rank}. {Author} - {NumPosts}", stat.Rank, stat.Author, stat.NumPosts);

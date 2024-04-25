@@ -21,14 +21,15 @@ public sealed class RedditPollingService :IHostedService, IDisposable {
     }
 
     public Task StartAsync(CancellationToken cancellationToken) {
-        _logger.LogInformation("Starting Process");
+        _logger.LogDebug("Starting Process");
+        _logger.LogInformation($"Scanning {_settings.Subreddit} for changes...");
         _monitor.StartMonitoring();
         return Task.CompletedTask;
         
     }
 
     public Task StopAsync(CancellationToken cancellationToken) {
-        _logger.LogInformation("Stopping Process");
+        _logger.LogDebug("Stopping Process");
         _monitor.StopMonitoring();
         return Task.CompletedTask;
     }

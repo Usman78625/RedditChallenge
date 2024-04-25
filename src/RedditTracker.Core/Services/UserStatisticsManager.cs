@@ -1,6 +1,6 @@
 using RedditTracker.Core.Models;
 
-namespace RedditTracker.Core;
+namespace RedditTracker.Core.Services;
 
 public sealed class UserStatisticsManager : IUserStatisticsManager {
     private readonly IUserStatisticsStorage _storage;

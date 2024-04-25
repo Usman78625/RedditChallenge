@@ -1,7 +1,8 @@
 using Reddit.Controllers;
 using Reddit.Controllers.EventArgs;
+using RedditTracker.Core;
 
-namespace RedditTracker.Core;
+namespace RedditTracker;
 
 
 public sealed class RedditApiClient:IRedditApiClient {

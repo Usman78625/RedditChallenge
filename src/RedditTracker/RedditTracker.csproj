@@ -2,15 +2,21 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+        <TargetFrameworks>net6.0;net7.0;net8.0;</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <WarningsAsErrors>True</WarningsAsErrors>
+        <OutDir>$(SolutionDir)/dist</OutDir>
     </PropertyGroup>
 
     <ItemGroup>
       <Content Include=".dockerignore">
         <Link>.dockerignore</Link>
+      </Content>
+      <None Remove="appsettings.json" />
+      <Content Include="appsettings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
 
@@ -26,10 +32,6 @@
     
     <ItemGroup>
       <ProjectReference Include="..\RedditTracker.Core\RedditTracker.Core.csproj" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <None Remove="Dockerfile" />
     </ItemGroup>
 
 </Project>

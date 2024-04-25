@@ -1,20 +1,21 @@
-﻿FROM mcr.microsoft.com/dotnet/runtime:7.0 AS base
+﻿ARG FRAMEWORK_VERSION=6.0
+ARG BUILD_CONFIGURATION=Release
+FROM mcr.microsoft.com/dotnet/runtime:$FRAMEWORK_VERSION AS base
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
-ARG BUILD_CONFIGURATION=Release
+FROM mcr.microsoft.com/dotnet/sdk:$FRAMEWORK_VERSION AS build
+ARG FRAMEWORK_VERSION
+ARG BUILD_CONFIGURATION
 WORKDIR /src
-COPY ["RedditTracker.csproj", "ConsoleApp1/"]
-RUN dotnet restore "ConsoleApp1/ConsoleApp1.csproj"
 COPY . .
-WORKDIR "/src/ConsoleApp1"
-RUN dotnet build "ConsoleApp1.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build RedditTracker.sln --property:"TargetFrameworks=net$FRAMEWORK_VERSION" -c $BUILD_CONFIGURATION -o /src/dist
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "ConsoleApp1.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+ARG FRAMEWORK_VERSION
+ARG BUILD_CONFIGURATION
+RUN dotnet publish RedditTracker.sln --property:"TargetFrameworks=net$FRAMEWORK_VERSION" --framework net$FRAMEWORK_VERSION -c $BUILD_CONFIGURATION -o /src/public /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ConsoleApp1.dll"]
+COPY --from=publish /src/public ./
+ENTRYPOINT ["dotnet", "RedditTracker.dll"]

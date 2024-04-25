@@ -39,3 +39,6 @@
 
 ~ 15:45
 19. Stop for the day to play with the kids during dad day.  Will pick back up tomorrow.
+
+~ Day 2 11:00
+20. Sat down for a second day.  Expecting to wrap up the code soon.  The code builds and runs, but the formatting is pretty ugly.  Going to clean that up, double check our regression tests and code coverage against the Core dll (the console app doesn't really contain code that is easily unit tested).  Lastly, I want to make sure the docker image is working correctly, since that is theoretically how we want to deploy this.  I'm not going to setup a build and deploy pipeline because I don't know what environment we are ultimately targeting, but using Docker as our host gives us a lot of options.

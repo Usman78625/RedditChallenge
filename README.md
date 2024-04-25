@@ -19,7 +19,7 @@ Copy the `sample.env` file to `.env`.  Follow the instructions in the file to ed
 You can build and run locally using any standard IDE or the application can be run in a Docker container.  To quickly get up and running with a container, simply call the `./run` script, which will set up the container, build and execute the application for you.
 
 ## The Exercise
-This was an interested and fun challenge.  I had to work with an unfamiliar API and get set up as dev in their system.  I also got to write some enterprise-quality code that was a bit entertaining along the way.
+This was an interesting and fun challenge.  I had to work with an unfamiliar API and get set up as dev in their system.  I also got to write some enterprise-quality code that was a bit entertaining along the way.
 
 My running notes as I was working can be found [here](Worklog.md).
 
